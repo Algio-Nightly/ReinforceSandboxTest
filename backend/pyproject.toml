@@ -1,0 +1,16 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "ML Code Judge — Problem-agnostic Machine Learning code evaluation platform"
+requires-python = ">=3.13"
+dependencies = [
+    "docker>=7.2.0",
+    "fastapi[standard]>=0.143.3",
+    "firebase-admin>=7.7.0",
+    "passlib[bcrypt]>=1.7.4",
+    "pydantic>=2.14.1",
+    "pydantic-settings>=2.16.0",
+    "python-dotenv>=1.2.4",
+    "python-jose[cryptography]>=3.5.0",
+    "uvicorn>=0.54.0",
+]

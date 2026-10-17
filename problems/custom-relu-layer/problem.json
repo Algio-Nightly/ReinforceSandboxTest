@@ -1,0 +1,9 @@
+{
+  "id": "custom-relu-layer",
+  "title": "Custom LeakyReLU Layer",
+  "difficulty": "Medium",
+  "tags": ["pytorch", "deep-learning", "autograd", "activation-functions"],
+  "description_markdown": "# Custom LeakyReLU Layer\n\nStandard Rectified Linear Unit (ReLU) activations can suffer from the *dying ReLU* problem, where neurons permanently output zero if their activations fall below zero, stopping gradient flow ($f'(z) = 0$ for $z < 0$).\n\n### The LeakyReLU Formulation\n**LeakyReLU** solves this by introducing a small non-zero slope $\\alpha$ (typically $0.01$) for negative inputs:\n\n$$f(x) = \\begin{cases} x & \\text{if } x \\ge 0 \\\\ \\alpha x & \\text{if } x < 0 \\end{cases}$$\n\nThe derivative with respect to $x$ is:\n\n$$f'(x) = \\begin{cases} 1 & \\text{if } x \\ge 0 \\\\ \\alpha & \\text{if } x < 0 \\end{cases}$$\n\n---\n\n### Implementation Requirements\nImplement the PyTorch `nn.Module` class `CustomLeakyReLU`:\n1. `__init__(self, negative_slope: float = 0.01)`: Stores the hyperparameter $\\alpha$.\n2. `forward(self, x: torch.Tensor) -> torch.Tensor`: Computes the LeakyReLU activation.\n3. Supports automatic differentiation via PyTorch autograd (`torch.autograd.backward`).\n4. Preserves input tensor shape and dtype.\n",
+  "starter_code": "import torch\nimport torch.nn as nn\n\nclass CustomLeakyReLU(nn.Module):\n    def __init__(self, negative_slope: float = 0.01):\n        super().__init__()\n        self.negative_slope = negative_slope\n\n    def forward(self, x: torch.Tensor) -> torch.Tensor:\n        \"\"\"\n        Compute LeakyReLU activation.\n        \n        Args:\n            x: Input tensor of arbitrary shape\n        Returns:\n            Output tensor with same shape and dtype\n        \"\"\"\n        # TODO: Implement forward pass with autograd compatibility\n        pass\n",
+  "constraints": "Tensor shape up to 4D\nValues in range [-1e4, 1e4]"
+}
