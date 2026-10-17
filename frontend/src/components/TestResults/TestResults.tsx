@@ -1,16 +1,5 @@
 import React, { useState } from "react";
 import type { SubmissionStatus } from "../../types";
-import {
-  CheckCircle2,
-  XCircle,
-  Lock,
-  ChevronDown,
-  ChevronRight,
-  Clock,
-  Terminal,
-  Activity,
-  Layers,
-} from "lucide-react";
 
 interface TestResultsProps {
   submission: SubmissionStatus | null;
@@ -46,8 +35,7 @@ export const TestResults: React.FC<TestResultsProps> = ({
           background: "var(--bg-secondary)",
         }}
       >
-        <Terminal size={32} style={{ marginBottom: "10px", opacity: 0.5 }} />
-        <p style={{ fontSize: "13px" }}>Hit "Submit Solution" to run your code against the evaluation sandbox.</p>
+        <p style={{ fontSize: "13px" }}>Hit "Submit Solution ↗" to run your code inside the Reinforce sandbox.</p>
       </div>
     );
   }
@@ -64,21 +52,15 @@ export const TestResults: React.FC<TestResultsProps> = ({
       >
         <div
           style={{
-            display: "flex",
-            alignItems: "flex-start",
-            gap: "12px",
             padding: "14px 16px",
-            borderRadius: "8px",
+            borderRadius: "6px",
             background: "var(--error-bg)",
             border: "1px solid var(--error-border)",
             color: "#fca5a5",
           }}
         >
-          <XCircle size={18} style={{ flexShrink: 0, marginTop: "2px" }} />
-          <div>
-            <div style={{ fontWeight: 600, fontSize: "14px", marginBottom: "4px" }}>Execution Error</div>
-            <div style={{ fontSize: "13px" }}>{error}</div>
-          </div>
+          <div style={{ fontWeight: 700, fontSize: "13px", marginBottom: "4px" }}>Execution Error</div>
+          <div style={{ fontSize: "13px" }}>{error}</div>
         </div>
       </div>
     );
@@ -118,36 +100,29 @@ export const TestResults: React.FC<TestResultsProps> = ({
           gap: "10px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           {isRunning ? (
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--accent-purple)" }}>
-              <Activity size={16} style={{ animation: "pulse 1.5s infinite" }} />
-              <span style={{ fontWeight: 600, fontSize: "13px" }}>
-                {submission?.status === "queued" ? "Queued in Sandbox..." : "Executing Pytest Grader..."}
-              </span>
-            </div>
+            <span style={{ fontWeight: 700, fontSize: "13px", color: "var(--accent-gold)" }}>
+              {submission?.status === "queued" ? "Queued in Sandbox..." : "Executing Pytest Suite..."}
+            </span>
           ) : isAllPassed ? (
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--success)" }}>
-              <CheckCircle2 size={16} />
-              <span style={{ fontWeight: 600, fontSize: "13px" }}>Accepted — All Tests Passed</span>
-            </div>
+            <span style={{ fontWeight: 700, fontSize: "13px", color: "var(--success)" }}>
+              Accepted — All Tests Passed
+            </span>
           ) : (
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--error)" }}>
-              <XCircle size={16} />
-              <span style={{ fontWeight: 600, fontSize: "13px" }}>Evaluation Finished — Some Tests Failed</span>
-            </div>
+            <span style={{ fontWeight: 700, fontSize: "13px", color: "var(--error)" }}>
+              Evaluation Finished — Tests Failed
+            </span>
           )}
         </div>
 
         {isCompleted && (
-          <div style={{ display: "flex", alignItems: "center", gap: "16px", fontSize: "12px", color: "var(--text-secondary)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-              <Layers size={13} />
-              <span>Score: <strong style={{ color: isAllPassed ? "var(--success)" : "#fff" }}>{passedCount}/{totalCount}</strong></span>
+          <div style={{ display: "flex", alignItems: "center", gap: "14px", fontSize: "12px", color: "var(--text-secondary)" }}>
+            <div>
+              Score: <strong style={{ color: isAllPassed ? "var(--success)" : "#ffffff" }}>{passedCount}/{totalCount}</strong>
             </div>
             {submission?.execution_time_ms !== null && submission?.execution_time_ms !== undefined && (
-              <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                <Clock size={13} />
+              <div>
                 <span>{submission.execution_time_ms} ms</span>
               </div>
             )}
@@ -162,8 +137,8 @@ export const TestResults: React.FC<TestResultsProps> = ({
             style={{
               height: "100%",
               width: `${passPercent}%`,
-              background: isAllPassed ? "var(--success)" : "var(--accent-purple)",
-              transition: "width 0.4s ease",
+              background: isAllPassed ? "var(--success)" : "var(--accent-gold)",
+              transition: "width 0.3s ease",
             }}
           />
         </div>
@@ -188,7 +163,7 @@ export const TestResults: React.FC<TestResultsProps> = ({
                     style={{
                       borderRadius: "6px",
                       background: "var(--bg-primary)",
-                      border: `1px solid ${passed ? "rgba(16, 185, 129, 0.2)" : "rgba(239, 68, 68, 0.25)"}`,
+                      border: `1px solid ${passed ? "rgba(34, 197, 94, 0.2)" : "rgba(239, 68, 68, 0.25)"}`,
                       overflow: "hidden",
                     }}
                   >
@@ -203,22 +178,15 @@ export const TestResults: React.FC<TestResultsProps> = ({
                         userSelect: "none",
                       }}
                     >
-                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                        {passed ? (
-                          <CheckCircle2 size={15} color="var(--success)" />
-                        ) : (
-                          <XCircle size={15} color="var(--error)" />
-                        )}
-                        <div>
-                          <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--text-primary)" }}>
-                            {t.name}
-                          </div>
-                          {t.docstring && (
-                            <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "2px" }}>
-                              {t.docstring}
-                            </div>
-                          )}
+                      <div>
+                        <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--text-primary)" }}>
+                          {t.name}
                         </div>
+                        {t.docstring && (
+                          <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "2px" }}>
+                            {t.docstring}
+                          </div>
+                        )}
                       </div>
 
                       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -231,17 +199,19 @@ export const TestResults: React.FC<TestResultsProps> = ({
                         >
                           {passed ? "Passed" : "Failed"}
                         </span>
-                        {isExpanded ? <ChevronDown size={14} color="var(--text-muted)" /> : <ChevronRight size={14} color="var(--text-muted)" />}
+                        <span style={{ fontSize: "10px", color: "var(--text-muted)" }}>
+                          {isExpanded ? "▲" : "▼"}
+                        </span>
                       </div>
                     </div>
 
-                    {/* Expandable details: error message & stdout */}
+                    {/* Expandable details */}
                     {isExpanded && (
                       <div
                         style={{
                           padding: "12px 14px",
                           borderTop: "1px solid var(--border-subtle)",
-                          background: "#070a10",
+                          background: "#08090b",
                           fontSize: "12px",
                         }}
                       >
@@ -268,11 +238,11 @@ export const TestResults: React.FC<TestResultsProps> = ({
                         {t.stdout && (
                           <div>
                             <div style={{ color: "var(--text-secondary)", fontWeight: 600, marginBottom: "4px" }}>
-                              Captured Output:
+                              Stdout:
                             </div>
                             <pre
                               style={{
-                                color: "#94a3b8",
+                                color: "#a1a1aa",
                                 background: "rgba(255, 255, 255, 0.04)",
                                 padding: "8px 10px",
                                 borderRadius: "4px",
@@ -301,9 +271,8 @@ export const TestResults: React.FC<TestResultsProps> = ({
         {/* Hidden Tests */}
         {hiddenTests.length > 0 && (
           <div style={{ marginTop: "10px" }}>
-            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "8px", display: "flex", alignItems: "center", gap: "6px" }}>
-              <Lock size={11} />
-              <span>Hidden Tests ({hiddenTests.filter(t => t.status === "passed").length}/{hiddenTests.length})</span>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "8px" }}>
+              Hidden Tests ({hiddenTests.filter(t => t.status === "passed").length}/{hiddenTests.length})
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
               {hiddenTests.map((t) => {
@@ -315,25 +284,22 @@ export const TestResults: React.FC<TestResultsProps> = ({
                     style={{
                       borderRadius: "6px",
                       background: "var(--bg-primary)",
-                      border: `1px solid ${passed ? "rgba(16, 185, 129, 0.15)" : "rgba(239, 68, 68, 0.2)"}`,
+                      border: `1px solid ${passed ? "rgba(34, 197, 94, 0.15)" : "rgba(239, 68, 68, 0.2)"}`,
                       padding: "10px 14px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
                     }}
                   >
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                      <Lock size={13} color="var(--text-muted)" />
-                      <div>
-                        <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--text-primary)" }}>
-                          {t.name}
-                        </div>
-                        {t.docstring && (
-                          <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "2px" }}>
-                            {t.docstring}
-                          </div>
-                        )}
+                    <div>
+                      <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--text-primary)" }}>
+                        {t.name}
                       </div>
+                      {t.docstring && (
+                        <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "2px" }}>
+                          {t.docstring}
+                        </div>
+                      )}
                     </div>
 
                     <span
@@ -349,13 +315,6 @@ export const TestResults: React.FC<TestResultsProps> = ({
           </div>
         )}
       </div>
-
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-      `}</style>
     </div>
   );
 };

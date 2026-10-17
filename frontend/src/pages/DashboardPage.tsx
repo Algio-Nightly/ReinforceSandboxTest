@@ -3,17 +3,13 @@ import { Link } from "react-router-dom";
 import type { ProblemSummary } from "../types";
 import { api } from "../services/api";
 import { Navbar } from "../components/Layout/Navbar";
-import {
-  Search,
-  ArrowRight,
-  Sparkles,
-} from "lucide-react";
 
 export const DashboardPage: React.FC = () => {
   const [problems, setProblems] = useState<ProblemSummary[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("All");
+  const [difficultyFilter, setDifficultyFilter] = useState<string>("All");
+  const [tagFilter, setTagFilter] = useState<string>("All");
 
   useEffect(() => {
     api.problems
@@ -28,14 +24,20 @@ export const DashboardPage: React.FC = () => {
       });
   }, []);
 
+  const allTags = Array.from(new Set(problems.flatMap((p) => p.tags)));
+
   const filteredProblems = problems.filter((p) => {
     const matchesSearch =
       p.title.toLowerCase().includes(search.toLowerCase()) ||
-      p.tags.some((t) => t.toLowerCase().includes(search.toLowerCase()));
+      p.tags.some((t) => t.toLowerCase().includes(search.toLowerCase())) ||
+      p.id.toLowerCase().includes(search.toLowerCase());
     const matchesDifficulty =
-      selectedDifficulty === "All" ||
-      p.difficulty.toLowerCase() === selectedDifficulty.toLowerCase();
-    return matchesSearch && matchesDifficulty;
+      difficultyFilter === "All" ||
+      p.difficulty.toLowerCase() === difficultyFilter.toLowerCase();
+    const matchesTag =
+      tagFilter === "All" ||
+      p.tags.some((t) => t.toLowerCase() === tagFilter.toLowerCase());
+    return matchesSearch && matchesDifficulty && matchesTag;
   });
 
   const getDifficultyBadge = (diff: string) => {
@@ -49,90 +51,104 @@ export const DashboardPage: React.FC = () => {
     }
   };
 
+  const getTagBadgeClass = (tag: string) => {
+    const t = tag.toLowerCase();
+    if (t.includes("pytorch") || t.includes("torch")) return "badge-product";
+    if (t.includes("numpy") || t.includes("scikit")) return "badge-kaggle";
+    return "badge-category";
+  };
+
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg-primary)" }}>
       <Navbar />
 
-      <main style={{ flex: 1, padding: "40px 24px", maxWidth: "1140px", margin: "0 auto", width: "100%" }}>
-        {/* Hero Section */}
-        <div style={{ marginBottom: "40px", textAlign: "center" }}>
+      <main style={{ flex: 1, padding: "48px 24px 80px", maxWidth: "1180px", margin: "0 auto", width: "100%" }}>
+        {/* Reinforce Hero Section */}
+        <div style={{ marginBottom: "48px", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
               alignItems: "center",
-              gap: "6px",
-              padding: "4px 12px",
+              gap: "8px",
+              padding: "5px 14px",
               borderRadius: "20px",
-              background: "rgba(99, 102, 241, 0.12)",
-              border: "1px solid rgba(99, 102, 241, 0.3)",
-              color: "#a5b4fc",
+              background: "rgba(245, 183, 49, 0.08)",
+              border: "1px solid rgba(245, 183, 49, 0.25)",
+              color: "var(--accent-gold)",
               fontSize: "12px",
               fontWeight: 600,
-              marginBottom: "16px",
+              marginBottom: "18px",
+              letterSpacing: "0.03em",
             }}
           >
-            <Sparkles size={14} color="var(--accent-purple)" />
-            <span>Problem-Agnostic Machine Learning Judge</span>
+            <span>REINFORCE SANDBOX</span>
+            <span style={{ opacity: 0.5 }}>•</span>
+            <span style={{ color: "#d1d5db" }}>AI/ML Club at SST</span>
           </div>
 
           <h1
             style={{
-              fontSize: "38px",
+              fontSize: "44px",
               fontWeight: 800,
               letterSpacing: "-0.03em",
-              marginBottom: "12px",
-              background: "linear-gradient(135deg, #fff 40%, #94a3b8 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
+              lineHeight: 1.15,
+              marginBottom: "16px",
+              color: "#ffffff",
             }}
           >
-            Master Machine Learning by Building
+            Code it, ship it,{" "}
+            <span
+              style={{
+                color: "var(--accent-gold)",
+                fontStyle: "italic",
+                fontFamily: "Georgia, 'Times New Roman', serif",
+                textShadow: "0 0 24px rgba(245, 183, 49, 0.35)",
+              }}
+            >
+              get scored
+            </span>
           </h1>
 
-          <p style={{ color: "var(--text-secondary)", fontSize: "16px", maxWidth: "600px", margin: "0 auto" }}>
-            Implement fundamental ML algorithms, numerical routines, and deep learning operators in an isolated, sandboxed environment.
+          <p
+            style={{
+              color: "var(--text-secondary)",
+              fontSize: "16px",
+              maxWidth: "620px",
+              margin: "0 auto",
+              lineHeight: 1.6,
+            }}
+          >
+            Real machine learning evaluations, algorithmic challenges, and tensor operations running in isolated sandboxes.
           </p>
         </div>
 
-        {/* Filter & Search Bar */}
+        {/* Search & Filter Bar - Dashboard Aesthetic */}
         <div
           style={{
+            background: "var(--bg-secondary)",
+            padding: "16px 20px",
+            borderRadius: "10px",
+            border: "1px solid var(--border-subtle)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             flexWrap: "wrap",
-            gap: "16px",
-            marginBottom: "28px",
+            gap: "14px",
+            marginBottom: "32px",
           }}
         >
-          {/* Search Box */}
-          <div
-            style={{
-              position: "relative",
-              flex: "1 1 300px",
-              maxWidth: "400px",
-            }}
-          >
-            <Search
-              size={16}
-              style={{
-                position: "absolute",
-                left: "12px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "var(--text-muted)",
-              }}
-            />
+          {/* Search Input */}
+          <div style={{ flex: "1 1 320px" }}>
             <input
               type="text"
-              placeholder="Search problems or tags (e.g. numpy, pytorch)..."
+              placeholder="Search by problem name, lead, tag, or description..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{
                 width: "100%",
-                padding: "10px 14px 10px 38px",
-                borderRadius: "8px",
-                background: "var(--bg-secondary)",
+                padding: "9px 14px",
+                borderRadius: "6px",
+                background: "#0d0e11",
                 border: "1px solid var(--border-subtle)",
                 color: "var(--text-primary)",
                 fontSize: "13px",
@@ -143,134 +159,175 @@ export const DashboardPage: React.FC = () => {
             />
           </div>
 
-          {/* Difficulty Filter Tabs */}
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            {["All", "Easy", "Medium", "Hard"].map((d) => (
-              <button
-                key={d}
-                onClick={() => setSelectedDifficulty(d)}
-                style={{
-                  padding: "6px 14px",
-                  borderRadius: "6px",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  border: "1px solid",
-                  transition: "all var(--trans-fast)",
-                  background:
-                    selectedDifficulty === d
-                      ? "var(--accent-indigo)"
-                      : "var(--bg-secondary)",
-                  color: selectedDifficulty === d ? "#fff" : "var(--text-secondary)",
-                  borderColor:
-                    selectedDifficulty === d
-                      ? "var(--accent-indigo)"
-                      : "var(--border-subtle)",
-                }}
-              >
-                {d}
-              </button>
-            ))}
+          {/* Filter Dropdowns */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+            <select
+              value={difficultyFilter}
+              onChange={(e) => setDifficultyFilter(e.target.value)}
+              style={{
+                padding: "8px 12px",
+                borderRadius: "6px",
+                background: "#0d0e11",
+                border: "1px solid var(--border-subtle)",
+                color: "var(--text-primary)",
+                fontSize: "12px",
+                fontWeight: 600,
+                outline: "none",
+                cursor: "pointer",
+              }}
+            >
+              <option value="All">Any Difficulty</option>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+
+            <select
+              value={tagFilter}
+              onChange={(e) => setTagFilter(e.target.value)}
+              style={{
+                padding: "8px 12px",
+                borderRadius: "6px",
+                background: "#0d0e11",
+                border: "1px solid var(--border-subtle)",
+                color: "var(--text-primary)",
+                fontSize: "12px",
+                fontWeight: 600,
+                outline: "none",
+                cursor: "pointer",
+              }}
+            >
+              <option value="All">Any Track</option>
+              {allTags.map((tag) => (
+                <option key={tag} value={tag}>
+                  {tag.toUpperCase()}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
-        {/* Problems List */}
+        {/* Problems Grid - Matching the Dashboard Screenshot */}
         {loading ? (
-          <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-muted)" }}>
-            Loading problem catalog...
+          <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-muted)", fontSize: "14px" }}>
+            Loading challenges from sandbox...
           </div>
         ) : filteredProblems.length === 0 ? (
           <div
-            className="glass-panel"
+            className="reinforce-card"
             style={{
               textAlign: "center",
               padding: "60px 20px",
               color: "var(--text-muted)",
             }}
           >
-            <p style={{ fontSize: "15px", marginBottom: "8px" }}>No problems found matching your criteria.</p>
+            <p style={{ fontSize: "15px", marginBottom: "12px", color: "var(--text-secondary)" }}>
+              No challenges found matching your filters.
+            </p>
             <button
               onClick={() => {
                 setSearch("");
-                setSelectedDifficulty("All");
+                setDifficultyFilter("All");
+                setTagFilter("All");
               }}
               className="btn btn-secondary"
             >
-              Clear filters
+              Reset Filters
             </button>
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "16px" }}>
-            {filteredProblems.map((prob) => (
-              <Link
-                key={prob.id}
-                to={`/problems/${prob.id}`}
-                style={{ textDecoration: "none" }}
-              >
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: "20px" }}>
+            {filteredProblems.map((prob) => {
+              const primaryTag = prob.tags[0] || "ML";
+              const secondaryTag = prob.tags[1] || "ALGORITHMS";
+
+              return (
                 <div
-                  className="glass-panel"
+                  key={prob.id}
+                  className="reinforce-card"
                   style={{
-                    padding: "20px 22px",
-                    height: "100%",
+                    padding: "24px",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
-                    transition: "transform var(--trans-fast), border-color var(--trans-fast), box-shadow var(--trans-fast)",
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.borderColor = "var(--border-accent)";
-                    e.currentTarget.style.boxShadow = "var(--shadow-md)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "none";
-                    e.currentTarget.style.borderColor = "var(--border-subtle)";
-                    e.currentTarget.style.boxShadow = "none";
+                    height: "100%",
                   }}
                 >
                   <div>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
+                    {/* Top Badges Row */}
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px", flexWrap: "wrap" }}>
+                      <span className={`badge ${getTagBadgeClass(primaryTag)}`}>
+                        {primaryTag}
+                      </span>
+                      <span className="badge badge-category">
+                        {secondaryTag}
+                      </span>
                       <span className={`badge ${getDifficultyBadge(prob.difficulty)}`}>
                         {prob.difficulty}
                       </span>
-                      <span style={{ fontSize: "12px", color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>
-                        {prob.id}
-                      </span>
                     </div>
 
-                    <h3 style={{ fontSize: "17px", fontWeight: 700, color: "#fff", marginBottom: "14px" }}>
+                    {/* Problem Title */}
+                    <h3 style={{ fontSize: "18px", fontWeight: 700, color: "#ffffff", marginBottom: "10px" }}>
                       {prob.title}
                     </h3>
 
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "18px" }}>
-                      {prob.tags.map((t) => (
-                        <span key={t} className="badge badge-tag">
-                          {t}
-                        </span>
-                      ))}
+                    {/* Problem ID / Description */}
+                    <p style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "20px", lineHeight: 1.5 }}>
+                      Evaluate numerical convergence, stability, and gradient flow inside the Reinforce isolated sandbox.
+                    </p>
+
+                    {/* Metadata Row */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "16px",
+                        fontSize: "12px",
+                        color: "var(--text-muted)",
+                        paddingBottom: "18px",
+                        marginBottom: "18px",
+                        borderBottom: "1px solid var(--border-subtle)",
+                      }}
+                    >
+                      <span>Public Tests</span>
+                      <span>•</span>
+                      <span>Hidden Grader</span>
+                      <span>•</span>
+                      <span style={{ color: "var(--accent-gold)" }}>Pytest Sandbox</span>
                     </div>
                   </div>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                      gap: "6px",
-                      color: "var(--accent-purple)",
-                      fontSize: "13px",
-                      fontWeight: 600,
-                      paddingTop: "12px",
-                      borderTop: "1px solid rgba(255, 255, 255, 0.05)",
-                    }}
-                  >
-                    <span>Solve Challenge</span>
-                    <ArrowRight size={14} />
+                  {/* Action Buttons Matching Dashboard */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <Link
+                      to={`/problems/${prob.id}`}
+                      className="btn btn-gold"
+                      style={{
+                        flex: 1,
+                        padding: "9px 14px",
+                        fontSize: "12px",
+                        textAlign: "center",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Solve Challenge ↗
+                    </Link>
+                    <Link
+                      to={`/problems/${prob.id}`}
+                      className="btn btn-secondary"
+                      style={{
+                        padding: "9px 14px",
+                        fontSize: "12px",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Specs
+                    </Link>
                   </div>
                 </div>
-              </Link>
-            ))}
+              );
+            })}
           </div>
         )}
       </main>

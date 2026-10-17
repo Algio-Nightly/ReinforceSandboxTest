@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import Editor from "@monaco-editor/react";
 import type { OnMount } from "@monaco-editor/react";
-import { RotateCcw, Play, Loader2, Code2 } from "lucide-react";
 
 interface CodeEditorProps {
   code: string;
@@ -23,33 +22,33 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
   const handleEditorDidMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
 
-    // Define custom dark cyber theme matching our palette
-    monaco.editor.defineTheme("ml-judge-dark", {
+    // Define custom dark theme matching the Reinforce warm charcoal palette
+    monaco.editor.defineTheme("reinforce-dark", {
       base: "vs-dark",
       inherit: true,
       rules: [
-        { token: "comment", foreground: "64748b", fontStyle: "italic" },
-        { token: "keyword", foreground: "a855f7" },
-        { token: "number", foreground: "38bdf8" },
-        { token: "string", foreground: "34d399" },
-        { token: "type", foreground: "818cf8" },
-        { token: "function", foreground: "60a5fa" },
+        { token: "comment", foreground: "71717a", fontStyle: "italic" },
+        { token: "keyword", foreground: "f5b731" },
+        { token: "number", foreground: "60a5fa" },
+        { token: "string", foreground: "4ade80" },
+        { token: "type", foreground: "facc15" },
+        { token: "function", foreground: "e4e4e7" },
       ],
       colors: {
-        "editor.background": "#0b0f19",
-        "editor.foreground": "#f8fafc",
-        "editorCursor.foreground": "#a855f7",
-        "editor.lineHighlightBackground": "#161d2d55",
-        "editorLineNumber.foreground": "#475569",
-        "editorLineNumber.activeForeground": "#94a3b8",
-        "editor.selectionBackground": "#6366f133",
-        "editor.inactiveSelectionBackground": "#6366f120",
+        "editor.background": "#0b0c0f",
+        "editor.foreground": "#f4f4f6",
+        "editorCursor.foreground": "#f5b731",
+        "editor.lineHighlightBackground": "#16171d88",
+        "editorLineNumber.foreground": "#52525b",
+        "editorLineNumber.activeForeground": "#f5b731",
+        "editor.selectionBackground": "#f5b73133",
+        "editor.inactiveSelectionBackground": "#f5b73118",
       },
     });
 
-    monaco.editor.setTheme("ml-judge-dark");
+    monaco.editor.setTheme("reinforce-dark");
 
-    // Register ML-specific autocompletions for numpy, torch, scikit-learn
+    // Register ML-specific autocompletions
     monaco.languages.registerCompletionItemProvider("python", {
       provideCompletionItems: (model: any, position: any) => {
         const word = model.getWordUntilPosition(position);
@@ -126,32 +125,32 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
   };
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column", background: "#0b0f19" }}>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", background: "#0b0c0f" }}>
       {/* Editor Top Bar */}
       <div
         style={{
-          height: "44px",
+          height: "46px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "0 14px",
+          padding: "0 16px",
           background: "var(--bg-secondary)",
           borderBottom: "1px solid var(--border-subtle)",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <Code2 size={16} color="var(--accent-purple)" />
-          <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--text-secondary)", letterSpacing: "0.04em" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <span style={{ fontSize: "12px", fontWeight: 700, color: "#ffffff", letterSpacing: "0.06em" }}>
             SOLUTION.PY
           </span>
           <span
             style={{
-              fontSize: "11px",
+              fontSize: "10px",
               padding: "2px 6px",
               borderRadius: "4px",
-              background: "rgba(56, 189, 248, 0.1)",
-              color: "#38bdf8",
-              fontWeight: 500,
+              background: "#22242a",
+              color: "var(--accent-gold)",
+              fontWeight: 600,
+              border: "1px solid var(--border-subtle)",
             }}
           >
             Python 3.11
@@ -162,30 +161,19 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
           <button
             onClick={onReset}
             className="btn btn-secondary"
-            style={{ padding: "5px 10px", fontSize: "12px" }}
+            style={{ padding: "5px 12px", fontSize: "12px" }}
             title="Reset code to starter template"
           >
-            <RotateCcw size={13} />
-            <span>Reset</span>
+            Reset
           </button>
 
           <button
             onClick={onSubmit}
             disabled={submitting}
-            className="btn btn-primary"
-            style={{ padding: "6px 16px", fontSize: "12px" }}
+            className="btn btn-gold"
+            style={{ padding: "6px 18px", fontSize: "12px" }}
           >
-            {submitting ? (
-              <>
-                <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} />
-                <span>Evaluating...</span>
-              </>
-            ) : (
-              <>
-                <Play size={13} fill="#fff" />
-                <span>Submit Solution</span>
-              </>
-            )}
+            {submitting ? "Evaluating in Sandbox..." : "Submit Solution ↗"}
           </button>
         </div>
       </div>
@@ -215,13 +203,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
           }}
         />
       </div>
-
-      <style>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 };

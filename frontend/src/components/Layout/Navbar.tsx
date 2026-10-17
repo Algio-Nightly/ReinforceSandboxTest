@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { BrainCircuit, LogOut, User as UserIcon, ListChecks } from "lucide-react";
 
 export const Navbar: React.FC<{ problemTitle?: string }> = ({ problemTitle }) => {
   const { user, logout } = useAuth();
@@ -10,76 +9,108 @@ export const Navbar: React.FC<{ problemTitle?: string }> = ({ problemTitle }) =>
   return (
     <header
       style={{
-        height: "52px",
-        background: "var(--bg-secondary)",
+        height: "56px",
+        background: "#0d0e11",
         borderBottom: "1px solid var(--border-subtle)",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "0 18px",
+        padding: "0 24px",
         zIndex: 50,
       }}
     >
-      {/* Brand & Problem link */}
-      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+      {/* Brand & Nav */}
+      <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
         <Link
           to="/"
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "8px",
+            gap: "10px",
             textDecoration: "none",
-            color: "#fff",
-            fontWeight: 700,
-            fontSize: "15px",
-            letterSpacing: "-0.02em",
           }}
         >
-          <div
+          <img
+            src="/reinforce-logo.png"
+            alt="Reinforce"
+            style={{ height: "26px", width: "auto" }}
+          />
+          <span
             style={{
-              width: "28px",
-              height: "28px",
-              borderRadius: "6px",
-              background: "var(--grad-primary)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              fontWeight: 800,
+              fontSize: "15px",
+              letterSpacing: "0.08em",
+              color: "#ffffff",
+              textTransform: "uppercase",
             }}
           >
-            <BrainCircuit size={16} color="#fff" />
-          </div>
-          <span>ML<span style={{ color: "var(--accent-indigo)" }}>Judge</span></span>
+            REINFORCE
+          </span>
+          <span
+            style={{
+              fontSize: "10px",
+              fontWeight: 700,
+              padding: "2px 6px",
+              borderRadius: "4px",
+              background: "var(--accent-gold-bg)",
+              color: "var(--accent-gold)",
+              border: "1px solid var(--accent-gold-border)",
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+            }}
+          >
+            SANDBOX
+          </span>
         </Link>
 
-        <div style={{ width: "1px", height: "18px", background: "var(--border-subtle)" }} />
+        <div style={{ width: "1px", height: "16px", background: "var(--border-subtle)" }} />
 
-        <Link
-          to="/"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            color: "var(--text-secondary)",
-            textDecoration: "none",
-            fontSize: "13px",
-            transition: "color var(--trans-fast)",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
-        >
-          <ListChecks size={15} />
-          <span>Problems</span>
-        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
+          <Link
+            to="/"
+            style={{
+              color: "#f4f4f6",
+              textDecoration: "none",
+              fontSize: "12px",
+              fontWeight: 600,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              transition: "color var(--trans-fast)",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent-gold)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#f4f4f6")}
+          >
+            Problems
+          </Link>
+          <a
+            href="https://sst.scaler.com"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              color: "var(--text-secondary)",
+              textDecoration: "none",
+              fontSize: "12px",
+              fontWeight: 600,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              transition: "color var(--trans-fast)",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
+          >
+            Tracks
+          </a>
+        </div>
 
         {problemTitle && (
           <>
-            <span style={{ color: "var(--text-muted)" }}>/</span>
+            <span style={{ color: "var(--text-muted)", fontSize: "12px" }}>/</span>
             <span
               style={{
                 fontSize: "13px",
                 color: "var(--text-primary)",
-                fontWeight: 500,
-                maxWidth: "280px",
+                fontWeight: 600,
+                maxWidth: "260px",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
@@ -91,7 +122,7 @@ export const Navbar: React.FC<{ problemTitle?: string }> = ({ problemTitle }) =>
         )}
       </div>
 
-      {/* User Actions */}
+      {/* Right User Actions */}
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
         {user ? (
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -100,26 +131,29 @@ export const Navbar: React.FC<{ problemTitle?: string }> = ({ problemTitle }) =>
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
-                background: "var(--bg-tertiary)",
-                padding: "4px 10px",
-                borderRadius: "20px",
+                background: "#1c1d22",
+                padding: "4px 12px",
+                borderRadius: "6px",
                 border: "1px solid var(--border-subtle)",
               }}
             >
               <div
                 style={{
-                  width: "20px",
-                  height: "20px",
+                  width: "18px",
+                  height: "18px",
                   borderRadius: "50%",
-                  background: "var(--accent-purple)",
+                  background: "var(--accent-gold)",
+                  color: "#000",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  fontSize: "10px",
+                  fontWeight: 800,
                 }}
               >
-                <UserIcon size={12} color="#fff" />
+                {(user.display_name || user.email)[0].toUpperCase()}
               </div>
-              <span style={{ fontSize: "12px", color: "var(--text-primary)", fontWeight: 500 }}>
+              <span style={{ fontSize: "12px", color: "var(--text-primary)", fontWeight: 600 }}>
                 {user.display_name || user.email.split("@")[0]}
               </span>
             </div>
@@ -130,20 +164,18 @@ export const Navbar: React.FC<{ problemTitle?: string }> = ({ problemTitle }) =>
                 navigate("/login");
               }}
               className="btn btn-secondary"
-              style={{ padding: "5px 10px", fontSize: "12px" }}
-              title="Sign Out"
+              style={{ padding: "5px 12px", fontSize: "12px" }}
             >
-              <LogOut size={13} />
-              <span>Logout</span>
+              Sign Out
             </button>
           </div>
         ) : (
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <Link to="/login" className="btn btn-secondary" style={{ padding: "6px 14px", fontSize: "12px" }}>
               Sign In
             </Link>
-            <Link to="/login?tab=register" className="btn btn-primary" style={{ padding: "6px 14px", fontSize: "12px" }}>
-              Register
+            <Link to="/login?tab=register" className="btn btn-gold" style={{ padding: "6px 16px", fontSize: "12px" }}>
+              Dashboard
             </Link>
           </div>
         )}

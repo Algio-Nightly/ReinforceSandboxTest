@@ -4,7 +4,6 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 import type { ProblemDetail } from "../../types";
-import { Tag, AlertCircle } from "lucide-react";
 
 interface ProblemViewProps {
   problem: ProblemDetail;
@@ -22,6 +21,13 @@ export const ProblemView: React.FC<ProblemViewProps> = ({ problem }) => {
     }
   };
 
+  const getTagBadgeClass = (tag: string) => {
+    const t = tag.toLowerCase();
+    if (t.includes("pytorch") || t.includes("torch")) return "badge-product";
+    if (t.includes("numpy") || t.includes("scikit")) return "badge-kaggle";
+    return "badge-category";
+  };
+
   return (
     <div
       style={{
@@ -33,20 +39,19 @@ export const ProblemView: React.FC<ProblemViewProps> = ({ problem }) => {
       }}
     >
       {/* Problem Header */}
-      <div style={{ marginBottom: "20px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", flexWrap: "wrap" }}>
+      <div style={{ marginBottom: "22px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", flexWrap: "wrap" }}>
           <span className={`badge ${getDifficultyClass(problem.difficulty)}`}>
             {problem.difficulty}
           </span>
           {problem.tags.map((tag) => (
-            <span key={tag} className="badge badge-tag">
-              <Tag size={10} style={{ marginRight: "3px" }} />
+            <span key={tag} className={`badge ${getTagBadgeClass(tag)}`}>
               {tag}
             </span>
           ))}
         </div>
 
-        <h1 style={{ fontSize: "24px", fontWeight: 700, margin: "0 0 16px 0", color: "#fff" }}>
+        <h1 style={{ fontSize: "24px", fontWeight: 800, margin: "0 0 14px 0", color: "#ffffff" }}>
           {problem.title}
         </h1>
 
@@ -69,13 +74,12 @@ export const ProblemView: React.FC<ProblemViewProps> = ({ problem }) => {
           style={{
             marginTop: "28px",
             padding: "16px",
-            borderRadius: "8px",
-            background: "rgba(99, 102, 241, 0.05)",
-            border: "1px solid rgba(99, 102, 241, 0.2)",
+            borderRadius: "6px",
+            background: "#191a20",
+            border: "1px solid var(--border-subtle)",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", color: "var(--accent-purple)", fontWeight: 600, fontSize: "13px" }}>
-            <AlertCircle size={15} />
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", color: "var(--accent-gold)", fontWeight: 700, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
             <span>Constraints & Bounds</span>
           </div>
           <pre
